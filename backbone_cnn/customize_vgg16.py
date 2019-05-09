@@ -152,16 +152,16 @@ class Vgg16_Customize(nn.Module):
         return x
 
 def vgg16_customize(pretrained=False, **kwargs):
-
+    ## Initial model
     model_pre = torchvision.models.vgg16(pretrained=True)
-
+    ## Load weight from pre-trained model
     model_pre.load_state_dict(model_zoo.load_url(model_urls['vgg16']))
-
+    ## Initial customize model
     model = Vgg16_Customize(**kwargs)
-
+    ## Customize weight
     for param_tensor in model_pre.state_dict():
         model.state_dict()[param_tensor] = model_pre.state_dict()[param_tensor]
     if pretrained:
         model.load_state_dict(torch.load('file_pt_path', map_location=device))
-
+    ## Return customized model
     return model
